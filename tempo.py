@@ -32,9 +32,6 @@ def read_file():
     d = dict()
     e_d = dict()
     t_issue_sub = dict()
-    l = []
-    calendar_count= 0
-    cal_list = []
 
     count_of_rides = 0
     create_date = 0
@@ -67,18 +64,16 @@ def read_file():
             else:
                 e_d[row[case_channel]] = 1
 
-            l.append(row[create_date])
-
             count_of_rides += 1
 
-    ticket_analysis(d, e_d, l[0], l[len(l)-1])
+    ticket_analysis(d, e_d)
 
     print('Total Number of Tickets:', count_of_rides)
 
 ##
 ## Ticket Analysis : 
 ## Prints Number of Tickets (Type and Channel)
-def ticket_analysis(dic_ticket, channel_dict, start_date, end_date):
+def ticket_analysis(dic_ticket, channel_dict):
 
     print('--------------------------------------')
     print('Case Type:')
@@ -93,23 +88,13 @@ def ticket_analysis(dic_ticket, channel_dict, start_date, end_date):
     print('')
 
     print('--------------------------------------')
-    print(start_date, '---', end_date)
-    year1 = int(start_date[0:4])
-    year2 = int(end_date[0:4])
-    month1 = int(start_date[5:7])
-    month2 = int(end_date[5:7])
-    day1 = int(start_date[8:10])
-    day2 = int(end_date[8:10])
-
-    d1 = date(year1, month1, day1)
-    d2 = date(year2, month2, day2)
-    result = (d2-d1).days//7
-
-    days = d2-d1
-    print(days, '', result, 'weeks')
-    print('')
     # 76:395, 77:886, 56:899, 46:631
-
+    print('Week over Week Percentage')
+    print('Week 1 Percentage:', round((76/395)*100,2))
+    print('Week 2 Percentage:', round((77/886)*100,2))
+    print('Week 3 Percentage:', round((56/899)*100,2))
+    print('Week 4 Percentage:', round((46/631)*100,2))
+    print('')
 
 ##
 ## Read File Storing Technical Issues Types and Reasons
