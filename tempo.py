@@ -69,6 +69,7 @@ def read_file():
     ticket_analysis(d, e_d)
 
     print('Total Number of Tickets:', count_of_rides)
+    print('')
 
 ##
 ## Ticket Analysis : 
@@ -89,11 +90,11 @@ def ticket_analysis(dic_ticket, channel_dict):
 
     print('--------------------------------------')
     # 76:395, 77:886, 56:899, 46:631
-    print('Week over Week Percentage')
-    print('Week 1 Percentage:', round((76/395)*100,2))
-    print('Week 2 Percentage:', round((77/886)*100,2))
-    print('Week 3 Percentage:', round((56/899)*100,2))
-    print('Week 4 Percentage:', round((46/631)*100,2))
+    print('Week Over Week Percentage:')
+    print('Week 1 Percentage:', round((76/398)*100,2), '%')
+    print('Week 2 Percentage:', round((77/886)*100,2), '%')
+    print('Week 3 Percentage:', round((56/899)*100,2), '%')
+    print('Week 4 Percentage:', round((46/631)*100,2), '%')
     print('')
 
 ##
