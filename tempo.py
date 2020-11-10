@@ -19,6 +19,8 @@
 #########
 
 import csv
+from collections import Counter
+from datetime import datetime, timedelta
 
 ## "volume_total.csv"
 ## Function to oopen a file on your local computer with the argument being the file path.
@@ -28,9 +30,13 @@ import csv
 def read_file():
     # Empty dictionary to count distinct occurences
     d = dict()
+    e_d = dict()
+    t_issue_sub = dict()
+
     count_of_rides = 0
     case_type = 1
     case_channel = 5
+    tech_issue_subtype = 2 
 
     #Created date:0, Case Type:1, Subtype:2, Reason:3, Customer reply count:4, Source:5, Ticket ID:6, Agent name:7, Subject:8
 
@@ -51,12 +57,50 @@ def read_file():
                 # Add the word to dictionary with count 1
                 d[row[case_type]] = 1
 
+            # Check if the Case Channel is already in dictionary
+            # Increment channel count of word by 1
+            if row[case_channel] in e_d:
+                e_d[row[case_channel]] = e_d[row[case_channel]] + 1
+            else:
+                e_d[row[case_channel]] = 1
+
+
+            #
+            if row[case_type] == "Technical Issues":
+                if row[tech_issue_subtype] in t_issue_sub:
+                    t_issue_sub[row]
+
+
             count_of_rides += 1
 
-    for key in list(d.keys()):
-        print(key, ':', d[key])
+    ticket_analysis(d, count_of_rides, e_d)
 
-    print(count_of_rides)
+##
+## Ticket Analysis 
+def ticket_analysis(dic_ticket, count_of_rides, channel_dict):
+
+    print('--------------------------------------')
+    print('Case Type:')
+    for key in list(dic_ticket.keys()):
+        print('|    ', key, ':', dic_ticket[key])
+    print('')
+
+    print('--------------------------------------')
+    print('Case Channel')
+    for key in list(channel_dict.keys()):
+        print('|    ', key, ':', channel_dict[key])
+    print('')
+     
+    print('--------------------------------------')
+    print('Top 3 Technical Issue Types and Reasons')
+    k = Counter(channel_dict)
+    # Finding 3 Highes Values
+    high = k.most_common(3)
+    for i in high:
+        print(i[0], ':', i[1])    
+    
+    print('')
+    print('Total:', count_of_rides)
 
 
 def main():
