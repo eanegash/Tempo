@@ -16,6 +16,8 @@
 # What are some common trends that you can identify in the technical issue tickets?
 # What are some common trends that you can identify about interactions for each technical issue (and do they vary by channel)?
 # What would your plan be to address any issues with the trending data that you see?
+#
+# Created date:0, Case Type:1, Subtype:2, Reason:3, Customer reply count:4, Source:5, Ticket ID:6, Agent name:7, Subject:8
 #########
 
 import csv
@@ -23,10 +25,8 @@ from collections import Counter
 from datetime import datetime, timedelta
 
 ## "volume_total.csv"
-## Function to oopen a file on your local computer with the argument being the file path.
-## A default argument of open is mode=r to open the contents of a file with only permission
-## to read the file, not write to it or perfomr a different operation. 
-## EACH row in our CSV will become a list of strings, with single-quotes around each value.
+## Open the contents of a file with only permission to read the file, not write to it or perfomr 
+## a different operation. EACH row in our CSV will become a list of strings, with single-quotes around each value.
 def read_file():
     # Empty dictionary to count distinct occurences
     d = dict()
@@ -38,8 +38,7 @@ def read_file():
     case_channel = 5
     tech_issue_subtype = 2 
 
-    #Created date:0, Case Type:1, Subtype:2, Reason:3, Customer reply count:4, Source:5, Ticket ID:6, Agent name:7, Subject:8
-
+    # “with” statement invokes what Python calls a “context manager” on file. Close file at end of with
     with open('volume_total.csv') as file:
         csv_reader_object = csv.reader(file)
         # Sniffer class has method has header that determines if a header exits. 
@@ -64,19 +63,13 @@ def read_file():
             else:
                 e_d[row[case_channel]] = 1
 
-
-            #
-            if row[case_type] == "Technical Issues":
-                if row[tech_issue_subtype] in t_issue_sub:
-                    t_issue_sub[row]
-
-
             count_of_rides += 1
 
     ticket_analysis(d, count_of_rides, e_d)
 
 ##
-## Ticket Analysis 
+## Ticket Analysis : 
+## Prints Number of Tickets (Type and Channel)
 def ticket_analysis(dic_ticket, count_of_rides, channel_dict):
 
     print('--------------------------------------')
@@ -86,26 +79,66 @@ def ticket_analysis(dic_ticket, count_of_rides, channel_dict):
     print('')
 
     print('--------------------------------------')
-    print('Case Channel')
+    print('Case Channel:')
     for key in list(channel_dict.keys()):
         print('|    ', key, ':', channel_dict[key])
     print('')
      
+    print('Total:', count_of_rides)
+
+
+##
+## Read File Storing Technical Issues Types and Reasons
+def read_top_technical_issues():
+    count = 0
+    case_type = 1
+    sub_type = 2
+    dic = dict()
+    
+    with open('Top_3_Technical_Issues_Types_and_Reasons.csv') as file:
+        csv_reader_object = csv.reader(file)
+
+        if csv.Sniffer().has_header:
+            next(csv_reader_object)
+
+        for row in csv_reader_object:
+            if row[case_type] == "Technical Issues":
+                if row[sub_type] in dic:
+                    dic[row[sub_type]] = dic[row[sub_type]] + 1
+                else:
+                    dic[row[sub_type]] = 1
+            
+            
+            
+            
+            count += 1
+    
+    top_three_and_precent(dic, count)
+
+## Print Percent of Overall Technical Issues (Week-over-Week Percentage)
+## Print Top 3 Technical Issue Types and Reasons
+def top_three_and_precent(dic, count):
+
+    ## 
+    print('')
+
     print('--------------------------------------')
-    print('Top 3 Technical Issue Types and Reasons')
-    k = Counter(channel_dict)
+    print('Top 3 Technical Issue Types and Reasons:')
+    k = Counter(dic)
     # Finding 3 Highes Values
     high = k.most_common(3)
     for i in high:
-        print(i[0], ':', i[1])    
-    
+        l = float(i[1])
+        print(i[0], ':', i[1], 'Elements,',  round(float(l/count)*100,2), '%')
+
     print('')
-    print('Total:', count_of_rides)
+    print('Technical Issue Total Count:', count)
 
 
 def main():
     read_file()
 
+    read_top_technical_issues()
 
 if __name__ == "__main__":
     main()
