@@ -22,7 +22,7 @@
 
 import csv
 from collections import Counter
-from datetime import datetime, timedelta
+from datetime import date
 
 ## "volume_total.csv"
 ## Open the contents of a file with only permission to read the file, not write to it or perfomr 
@@ -32,8 +32,12 @@ def read_file():
     d = dict()
     e_d = dict()
     t_issue_sub = dict()
+    l = []
+    calendar_count= 0
+    cal_list = []
 
     count_of_rides = 0
+    create_date = 0
     case_type = 1
     case_channel = 5
     tech_issue_subtype = 2 
@@ -63,14 +67,18 @@ def read_file():
             else:
                 e_d[row[case_channel]] = 1
 
+            l.append(row[create_date])
+
             count_of_rides += 1
 
-    ticket_analysis(d, count_of_rides, e_d)
+    ticket_analysis(d, e_d, l[0], l[len(l)-1])
+
+    print('Total Number of Tickets:', count_of_rides)
 
 ##
 ## Ticket Analysis : 
 ## Prints Number of Tickets (Type and Channel)
-def ticket_analysis(dic_ticket, count_of_rides, channel_dict):
+def ticket_analysis(dic_ticket, channel_dict, start_date, end_date):
 
     print('--------------------------------------')
     print('Case Type:')
@@ -83,8 +91,24 @@ def ticket_analysis(dic_ticket, count_of_rides, channel_dict):
     for key in list(channel_dict.keys()):
         print('|    ', key, ':', channel_dict[key])
     print('')
-     
-    print('Total:', count_of_rides)
+
+    print('--------------------------------------')
+    print(start_date, '---', end_date)
+    year1 = int(start_date[0:4])
+    year2 = int(end_date[0:4])
+    month1 = int(start_date[5:7])
+    month2 = int(end_date[5:7])
+    day1 = int(start_date[8:10])
+    day2 = int(end_date[8:10])
+
+    d1 = date(year1, month1, day1)
+    d2 = date(year2, month2, day2)
+    result = (d2-d1).days//7
+
+    days = d2-d1
+    print(days, '', result, 'weeks')
+    print('')
+    # 76:395, 77:886, 56:899, 46:631
 
 
 ##
@@ -107,20 +131,16 @@ def read_top_technical_issues():
                     dic[row[sub_type]] = dic[row[sub_type]] + 1
                 else:
                     dic[row[sub_type]] = 1
-            
-            
-            
-            
+
             count += 1
     
     top_three_and_precent(dic, count)
+    
+
 
 ## Print Percent of Overall Technical Issues (Week-over-Week Percentage)
 ## Print Top 3 Technical Issue Types and Reasons
 def top_three_and_precent(dic, count):
-
-    ## 
-    print('')
 
     print('--------------------------------------')
     print('Top 3 Technical Issue Types and Reasons:')
@@ -129,10 +149,12 @@ def top_three_and_precent(dic, count):
     high = k.most_common(3)
     for i in high:
         l = float(i[1])
-        print(i[0], ':', i[1], 'Elements,',  round(float(l/count)*100,2), '%')
+        print(i[0], ':', i[1], 'Elements,',  round(float(l/count)*100,2),'%')
 
     print('')
-    print('Technical Issue Total Count:', count)
+    print('Technical Issues Total Count:', count)
+
+
 
 
 def main():
