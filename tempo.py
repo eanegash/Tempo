@@ -77,6 +77,7 @@ def read_file():
                 count_of_tech_issues += 1
 
             count_of_rides += 1
+    
     # Method
     ticket_analysis(d, e_d)
     # Method
