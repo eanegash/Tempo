@@ -39,6 +39,9 @@ def read_file():
     case_channel = 5
     tech_issue_subtype = 2 
 
+    count_of_tech_issues = 0
+    ti_dic = dict()
+
     # “with” statement invokes what Python calls a “context manager” on file. Close file at end of with
     with open('volume_total.csv') as file:
         csv_reader_object = csv.reader(file)
@@ -64,14 +67,25 @@ def read_file():
             else:
                 e_d[row[case_channel]] = 1
 
-            count_of_rides += 1
+            # Organize Technical Issues by Subtype
+            if row[case_type] == "Technical Issues":
+                if row[tech_issue_subtype] in ti_dic:
+                    ti_dic[row[tech_issue_subtype]] = ti_dic[row[tech_issue_subtype]] + 1
+                else:
+                    ti_dic[row[tech_issue_subtype]] = 1
 
+                count_of_tech_issues += 1
+
+            count_of_rides += 1
+    # Method
     ticket_analysis(d, e_d)
+    # Method
+    top_three_and_precent(ti_dic, count_of_tech_issues)
 
     print('Total Number of Tickets:', count_of_rides)
     print('')
 
-##
+
 ## Ticket Analysis : 
 ## Prints Number of Tickets (Type and Channel)
 def ticket_analysis(dic_ticket, channel_dict):
@@ -97,32 +111,6 @@ def ticket_analysis(dic_ticket, channel_dict):
     print('Week 4 Percentage:', round((46/631)*100,2), '%')
     print('')
 
-##
-## Read File Storing Technical Issues Types and Reasons
-def read_top_technical_issues():
-    count = 0
-    case_type = 1
-    sub_type = 2
-    dic = dict()
-    
-    with open('Top_3_Technical_Issues_Types_and_Reasons.csv') as file:
-        csv_reader_object = csv.reader(file)
-
-        if csv.Sniffer().has_header:
-            next(csv_reader_object)
-
-        for row in csv_reader_object:
-            if row[case_type] == "Technical Issues":
-                if row[sub_type] in dic:
-                    dic[row[sub_type]] = dic[row[sub_type]] + 1
-                else:
-                    dic[row[sub_type]] = 1
-
-            count += 1
-    
-    top_three_and_precent(dic, count)
-    
-
 
 ## Print Percent of Overall Technical Issues (Week-over-Week Percentage)
 ## Print Top 3 Technical Issue Types and Reasons
@@ -141,12 +129,8 @@ def top_three_and_precent(dic, count):
     print('Technical Issues Total Count:', count)
 
 
-
-
 def main():
     read_file()
-
-    read_top_technical_issues()
 
 if __name__ == "__main__":
     main()
